@@ -5,7 +5,7 @@ import '../model/product.dart';
 class Products with ChangeNotifier {
   // _items cannot be accessed from outside
   final List<Product> _items = [
-     Product(
+    Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -51,5 +51,9 @@ class Products with ChangeNotifier {
     // Listeners listening to this notfier gets rebuild when something
     // changes
     notifyListeners();
+  }
+
+  Product getProductById(String id) {
+    return items.firstWhere((item) => item.id == id);
   }
 }
