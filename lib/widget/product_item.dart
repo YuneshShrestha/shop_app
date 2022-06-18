@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/provider/product.dart';
 import 'package:shop_app/screen/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  final String? id;
-  final String? title;
-  final String? description;
-  final double? price;
-  final String? imageUrl;
-  const ProductItem(
-      {this.id,
-      this.title,
-      this.description,
-      this.price,
-      this.imageUrl,
-      Key? key})
-      : super(key: key);
+  const ProductItem({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var product = Provider.of<Product>(context);
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route, arguments: id),
+      onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route,
+          arguments: product.id),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: GridTile(
-          child: Image.network(imageUrl!, fit: BoxFit.cover),
+          child: Image.network(product.imageUrl!, fit: BoxFit.cover),
           footer: GridTileBar(
               backgroundColor: Colors.black87,
               leading: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite),
+                onPressed: () {
+                  product.toggleFavrouite();
+                },
+                icon: product.isFavourite!
+                    ? const Icon(Icons.favorite)
+                    : const Icon(Icons.favorite_outline),
                 color: Theme.of(context).colorScheme.secondary,
               ),
               title: Text(
-                title!,
+                product.title!,
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(

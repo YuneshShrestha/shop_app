@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../model/product.dart';
+import 'product.dart';
 
 // ChangeNotifier helps to create a communication channel using context
 class Products with ChangeNotifier {
