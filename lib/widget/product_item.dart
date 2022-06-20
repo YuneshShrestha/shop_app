@@ -8,7 +8,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var product = Provider.of<Product>(context);
+    var product = Provider.of<Product>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route,
           arguments: product.id),
@@ -18,14 +18,18 @@ class ProductItem extends StatelessWidget {
           child: Image.network(product.imageUrl!, fit: BoxFit.cover),
           footer: GridTileBar(
               backgroundColor: Colors.black87,
-              leading: IconButton(
-                onPressed: () {
-                  product.toggleFavrouite();
+              leading: Consumer<Product>(
+                builder: (context, value, child) {
+                  return IconButton(
+                    onPressed: () {
+                      product.toggleFavrouite();
+                    },
+                    icon: product.isFavourite!
+                        ? const Icon(Icons.favorite)
+                        : const Icon(Icons.favorite_outline),
+                    color: Theme.of(context).colorScheme.secondary,
+                  );
                 },
-                icon: product.isFavourite!
-                    ? const Icon(Icons.favorite)
-                    : const Icon(Icons.favorite_outline),
-                color: Theme.of(context).colorScheme.secondary,
               ),
               title: Text(
                 product.title!,
