@@ -27,7 +27,7 @@ class ProductItem extends StatelessWidget {
                     icon: product.isFavourite!
                         ? const Icon(Icons.favorite)
                         : const Icon(Icons.favorite_outline),
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Colors.orange,
                   );
                 },
               ),
