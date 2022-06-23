@@ -8,7 +8,8 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var product = Provider.of<Product>(context, listen: false);
+    // here i kept listen false so that build method will not run again but it caused error so i fixed it
+    var product = Provider.of<Product>(context);
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route,
           arguments: product.id),

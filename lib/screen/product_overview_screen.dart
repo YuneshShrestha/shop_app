@@ -20,13 +20,15 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         actions: [
           PopupMenuButton(
               onSelected: (FilterOptions selectedValue) {
-                setState(() {
-                  if (selectedValue == FilterOptions.favourites) {
+                if (selectedValue == FilterOptions.favourites) {
+                  setState(() {
                     showFavs = true;
-                  } else {
+                  });
+                } else {
+                  setState(() {
                     showFavs = false;
-                  }
-                });
+                  });
+                }
               },
               itemBuilder: (_) => [
                     const PopupMenuItem(
