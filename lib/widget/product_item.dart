@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/provider/product.dart';
 import 'package:shop_app/screen/product_detail_screen.dart';
 
@@ -10,6 +11,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // here i kept listen false so that build method will not run again but it caused error so i fixed it
     var product = Provider.of<Product>(context);
+    var cart = Provider.of<Cart>(context);
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route,
           arguments: product.id),
@@ -37,7 +39,9 @@ class ProductItem extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  cart.addItem(product.id!, product.price!, product.title!);
+                },
                 icon: const Icon(Icons.shopping_cart),
                 color: Theme.of(context).colorScheme.secondary,
               )),

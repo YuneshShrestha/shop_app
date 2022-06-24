@@ -13,9 +13,13 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem>? _items;
+  final Map<String, CartItem>? _items = {};
   Map<String, CartItem> get items {
     return {..._items!};
+  }
+
+  int get itemCount {
+    return _items!.length;
   }
 
   void addItem(String productId, double price, String title) {
@@ -29,10 +33,13 @@ class Cart with ChangeNotifier {
               quantity: existingProduct.quantity! + 1,
               price: existingProduct.price));
     } else {
+      // items list ma tyo product id xaina bhnae naya product add garnu natra mathi
+      // ko if chalayera quantity badhaunu
       _items!.putIfAbsent(
           productId,
           () =>
               CartItem(id: productId, title: title, price: price, quantity: 1));
     }
+    notifyListeners();
   }
 }
