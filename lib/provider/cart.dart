@@ -42,4 +42,12 @@ class Cart with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  double get findTotal {
+    double price = 0.0;
+    items.forEach((key, data) {
+      price += data.quantity! * data.price!;
+    });
+    return price;
+  }
 }

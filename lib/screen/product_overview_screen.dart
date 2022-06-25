@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/cart.dart';
+import 'package:shop_app/screen/cart_screen.dart';
 import 'package:shop_app/widget/badge.dart';
 import 'package:shop_app/widget/products_grid.dart';
 
@@ -52,7 +53,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             // J kura rebuild hunna teslai bahira child ma rakhna thik
             child: IconButton(
               icon: const Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.route);
+              },
             ),
           ),
         ],
