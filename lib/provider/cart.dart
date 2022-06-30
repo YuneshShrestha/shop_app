@@ -50,4 +50,9 @@ class Cart with ChangeNotifier {
     });
     return price;
   }
+
+  void removeItem(productId) {
+    _items!.remove(productId);
+    notifyListeners();
+  }
 }
