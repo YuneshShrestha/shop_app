@@ -4,12 +4,11 @@ import 'package:shop_app/provider/cart.dart';
 
 // ignore: must_be_immutable
 class CartItem extends StatelessWidget {
-  String productId;
   String id;
   String title;
   int quantity;
   double price;
-  CartItem(this.productId, this.id, this.title, this.quantity, this.price,
+  CartItem(this.id, this.title, this.quantity, this.price,
       {Key? key})
       : super(key: key);
 
@@ -26,7 +25,7 @@ class CartItem extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).removeItem(productId);
+        Provider.of<Cart>(context, listen: false).removeItem(id);
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 5.0),
