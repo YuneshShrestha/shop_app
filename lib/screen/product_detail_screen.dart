@@ -26,11 +26,17 @@ class ProductDetailScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+            const SizedBox(
+              height: 10.0,
+            ),
             Center(
               child: Text(
-                "Rs ${product.price}",
+                "Rs. ${product.price}",
                 style: const TextStyle(fontSize: 20.0, color: Colors.grey),
               ),
+            ),
+            const SizedBox(
+              height: 10.0,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
