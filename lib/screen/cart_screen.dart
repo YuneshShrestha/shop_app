@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/cart.dart' as carts;
-import 'package:shop_app/provider/orders.dart';
-import 'package:shop_app/widget/cart_item.dart' as cart_item;
+import '../provider/cart.dart' as carts;
+import '../provider/orders.dart';
+import '../widget/cart_item.dart' as cart_item;
 
 class CartScreen extends StatelessWidget {
   static const route = '/cart_screen';
@@ -31,18 +31,11 @@ class CartScreen extends StatelessWidget {
                   const Spacer(),
                   Chip(
                       label: Text(
-                        '${cart.findTotal}',
+                        'Rs. ${cart.findTotal}',
                         style: const TextStyle(color: Colors.white),
                       ),
                       backgroundColor: Theme.of(context).colorScheme.primary),
-                  TextButton(
-                      onPressed: () {
-                        Provider.of<Orders>(context, listen: false).addOrder(
-                            cart.items.values.toList() as List<carts.CartItem>,
-                            cart.findTotal);
-                        cart.clearItem();
-                      },
-                      child: Text("Order Now".toUpperCase()))
+                  OrderButton(cart: cart)
                 ],
               ),
             ),
@@ -54,15 +47,58 @@ class CartScreen extends StatelessWidget {
             itemCount: cart.items.length,
             itemBuilder: (cxt, index) {
               return cart_item.CartItem(
-                  // cart.items.keys.toList()[index],
-                  cart.items.values.toList()[index].id!,
-                  cart.items.values.toList()[index].title!,
-                  cart.items.values.toList()[index].quantity!,
-                  cart.items.values.toList()[index].price!);
+                // cart.items.keys.toList()[index],
+                cart.items.values.toList()[index].id,
+                cart.items.values.toList()[index].title,
+                cart.items.values.toList()[index].quantity,
+                cart.items.values.toList()[index].price,
+              );
             },
           ))
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final carts.Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var isLoading = false;
+
+  Future<void> addCart() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<Orders>(context, listen: false)
+        .addOrder(widget.cart.items.values.toList(), widget.cart.findTotal);
+    setState(() {
+      isLoading = false;
+    });
+    widget.cart.clearItem();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: widget.cart.findTotal <= 0
+            ? null
+            : () => addCart().catchError((error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Adding Order Failed $error")));
+                }),
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Text("Order Now".toUpperCase()));
   }
 }

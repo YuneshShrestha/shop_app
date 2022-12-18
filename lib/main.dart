@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/cart.dart';
-import 'package:shop_app/provider/orders.dart';
-import 'package:shop_app/screen/cart_screen.dart';
+import './provider/auth.dart';
+import './screen/auth_screen.dart';
+import './screen/edit_product_screen.dart';
+import './provider/cart.dart';
+import './provider/orders.dart';
 import './provider/products.dart';
+import './screen/cart_screen.dart';
+import './screen/order_screen.dart';
+import './screen/user_products_screen.dart';
+
 import './screen/product_detail_screen.dart';
 import './screen/product_overview_screen.dart';
 
@@ -23,12 +29,18 @@ class MyApp extends StatelessWidget {
           create: (context) => Cart(),
         ),
         ChangeNotifierProvider(create: (context) => Orders()),
+        ChangeNotifierProvider(create: (context) => Auth()),
       ],
       child: MaterialApp(
-        home: const ProductOverviewScreen(),
+        home: const AuthScreen(),
         routes: {
+          ProductOverviewScreen.route: (context) =>
+              const ProductOverviewScreen(),
           ProductDetailScreen.route: (context) => const ProductDetailScreen(),
-          CartScreen.route: (context) => const CartScreen()
+          CartScreen.route: (context) => const CartScreen(),
+          OrderScreen.route: (context) => const OrderScreen(),
+          UserProductsScreen.route: (context) => const UserProductsScreen(),
+          EditProductScreen.route: (context) => const EditProductScreen()
         },
         theme: ThemeData(
             fontFamily: 'Lato',

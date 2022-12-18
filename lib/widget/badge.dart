@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Badge extends StatelessWidget {
-  Widget? child;
+  final Widget child;
   Color? color;
-  String? value;
+  final String value;
   Badge({required this.child, this.color, required this.value, Key? key})
       : super(key: key);
 
@@ -12,7 +13,7 @@ class Badge extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        child!,
+        child,
         Positioned(
           top: 8,
           right: 8,
@@ -20,10 +21,10 @@ class Badge extends StatelessWidget {
             padding: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: color ?? Theme.of(context).colorScheme.secondary),
+                color: color??Theme.of(context).colorScheme.secondary,),
             constraints: const BoxConstraints(minWidth: 16, maxHeight: 16),
             child: Text(
-              value!,
+              value,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 10.0),
             ),

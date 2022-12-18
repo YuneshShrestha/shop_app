@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/cart.dart';
-import 'package:shop_app/screen/cart_screen.dart';
-import 'package:shop_app/widget/badge.dart';
-import 'package:shop_app/widget/products_grid.dart';
+import 'package:shop_app/provider/products.dart';
+import '../provider/cart.dart';
+import '../screen/cart_screen.dart';
+import '../widget/badge.dart';
+import '../widget/main_drawer.dart';
+import '../widget/products_grid.dart';
 
 enum FilterOptions { favourites, all }
 
 class ProductOverviewScreen extends StatefulWidget {
+  static const route = "/product_overview_screen";
   const ProductOverviewScreen({Key? key}) : super(key: key);
 
   @override
@@ -15,10 +18,27 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-  bool showFavs = false;
+  var showFavs = false;
+  var isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts()
+        .then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MainDrawer(),
       appBar: AppBar(
         title: const Text('Product'),
         actions: [
@@ -47,7 +67,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ),
           Consumer<Cart>(
             builder: (_, cart, child) => Badge(
-              child: child,
+              child: child!,
               value: cart.itemCount.toString(),
             ),
             // J kura rebuild hunna teslai bahira child ma rakhna thik
@@ -60,7 +80,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ),
         ],
       ),
-      body: ProductsGrid(showFavs: showFavs),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(showFavs: showFavs),
     );
   }
 }

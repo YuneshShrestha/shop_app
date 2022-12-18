@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/cart.dart';
-import 'package:shop_app/provider/product.dart';
-import 'package:shop_app/screen/product_detail_screen.dart';
+import '../provider/cart.dart';
+import '../provider/product.dart';
+import '../screen/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class ProductItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: GridTile(
-          child: Image.network(product.imageUrl!, fit: BoxFit.cover),
+          child: Image.network(product.imageUrl, fit: BoxFit.cover),
           footer: GridTileBar(
               backgroundColor: Colors.black87,
               leading: Consumer<Product>(
@@ -27,7 +27,7 @@ class ProductItem extends StatelessWidget {
                     onPressed: () {
                       product.toggleFavrouite();
                     },
-                    icon: product.isFavourite!
+                    icon: product.isFavourite
                         ? const Icon(Icons.favorite)
                         : const Icon(Icons.favorite_outline),
                     color: Colors.orange,
@@ -35,12 +35,23 @@ class ProductItem extends StatelessWidget {
                 },
               ),
               title: Text(
-                product.title!,
+                product.title,
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(
                 onPressed: () {
-                  cart.addItem(product.id!, product.price!, product.title!);
+                  cart.addItem(product.id, product.price, product.title);
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: const Text('Added to Cart'),
+                    duration: const Duration(seconds: 3),
+                    action: SnackBarAction(
+                      label: 'DISMISS',
+                      onPressed: () {
+                        cart.removeSingleProduct(product.id);
+                      },
+                    ),
+                  ));
                 },
                 icon: const Icon(Icons.shopping_cart),
                 color: Theme.of(context).colorScheme.secondary,
