@@ -15,26 +15,41 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
+  String authToken;
+  String userId;
+  Products(this.authToken, this.userId, this._items);
   List<Product> get showFavs {
     return _items.where((element) => element.isFavourite).toList();
   }
 
-  Future<void> fetchAndSetProducts() async {
-    const url = "https://myapp-8ae0f-default-rtdb.firebaseio.com/products.json";
+  Future<void> fetchAndSetProducts([var filterUrl = false]) async {
+    var additionalUrl = filterUrl?'orderBy="creatorId"&equalTo="$userId"':' ';
+    var url =
+        'https://myapp-8ae0f-default-rtdb.firebaseio.com/products.json?auth=$authToken&$additionalUrl';
     try {
       final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+
       final List<Product> products = [];
       if (extractedData == null) return;
+      url =
+          "https://myapp-8ae0f-default-rtdb.firebaseio.com/userFavourite/$userId.json?auth=$authToken";
+      final favouriteResponse = await http.get(Uri.parse(url));
+      final favouriteData = json.decode(favouriteResponse.body);
       extractedData.forEach((productID, productData) {
         products.insert(
-            0,
-            Product(
-                id: productID,
-                title: productData['title'],
-                description: productData['description'],
-                price: productData['price'],
-                imageUrl: productData['imageUrl']));
+          0,
+          Product(
+            id: productID,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+            isFavourite: favouriteData == null
+                ? false
+                : favouriteData[productID] ?? false,
+          ),
+        );
       });
       _items = products;
     } catch (e) {
@@ -43,7 +58,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = "https://myapp-8ae0f-default-rtdb.firebaseio.com/products.json";
+    final url =
+        "https://myapp-8ae0f-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     // body takes json format so we can't directly convert object to json but we convert map to json
     try {
       final response = await http.post(Uri.parse(url),
@@ -52,7 +68,7 @@ class Products with ChangeNotifier {
             "description": product.description,
             "imageUrl": product.imageUrl,
             "price": product.price,
-            "isFavourite": product.isFavourite
+            "creatorId": userId
           }));
 
       product = Product(
@@ -75,7 +91,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     try {
       final url =
-          "https://myapp-8ae0f-default-rtdb.firebaseio.com/products/$id.json";
+          "https://myapp-8ae0f-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken";
       await http.patch(Uri.parse(url),
           body: json.encode({
             "title": newProduct.title,
@@ -93,7 +109,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        "https://myapp-8ae0f-default-rtdb.firebaseio.com/products/$id.json";
+        "https://myapp-8ae0f-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken";
     final existingItemIndex = _items.indexWhere((item) => item.id == id);
     Product? existingItem = _items[existingItemIndex];
     _items.removeAt(existingItemIndex);

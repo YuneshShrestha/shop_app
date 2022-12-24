@@ -22,31 +22,47 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => Products(),
+        ChangeNotifierProvider(create: (context) => Auth()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (context) => Products('', '', []),
+          update: (context, auth, periviousProducts) => Products(
+              auth.token!,
+              auth.userId,
+              periviousProducts == null ? [] : periviousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
-        ChangeNotifierProvider(create: (context) => Orders()),
-        ChangeNotifierProvider(create: (context) => Auth()),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (context) => Orders('', [], ''),
+          update: (context, auth, previousOrders) =>
+              Orders(auth.token!, previousOrders!.orders, auth.userId,),
+        ),
       ],
-      child: MaterialApp(
-        home: const AuthScreen(),
-        routes: {
-          ProductOverviewScreen.route: (context) =>
-              const ProductOverviewScreen(),
-          ProductDetailScreen.route: (context) => const ProductDetailScreen(),
-          CartScreen.route: (context) => const CartScreen(),
-          OrderScreen.route: (context) => const OrderScreen(),
-          UserProductsScreen.route: (context) => const UserProductsScreen(),
-          EditProductScreen.route: (context) => const EditProductScreen()
+      child: Consumer<Auth>(
+        builder: (context, auth, _) {
+          return MaterialApp(
+            home: auth.isAuth
+                ? const ProductOverviewScreen()
+                : const AuthScreen(),
+            routes: {
+              ProductOverviewScreen.route: (context) =>
+                  const ProductOverviewScreen(),
+              ProductDetailScreen.route: (context) =>
+                  const ProductDetailScreen(),
+              CartScreen.route: (context) => const CartScreen(),
+              OrderScreen.route: (context) => const OrderScreen(),
+              UserProductsScreen.route: (context) => const UserProductsScreen(),
+              EditProductScreen.route: (context) => const EditProductScreen()
+            },
+            theme: ThemeData(
+                fontFamily: 'Lato',
+                colorScheme:
+                    ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+                        .copyWith(secondary: Colors.orange)),
+            debugShowCheckedModeBanner: false,
+          );
         },
-        theme: ThemeData(
-            fontFamily: 'Lato',
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
-                .copyWith(secondary: Colors.orange)),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

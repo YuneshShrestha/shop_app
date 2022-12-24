@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/provider/auth.dart';
 import '../provider/cart.dart';
 import '../provider/product.dart';
 import '../screen/product_detail_screen.dart';
@@ -12,6 +13,7 @@ class ProductItem extends StatelessWidget {
     // here i kept listen false so that build method will not run again but it caused error so i fixed it
     var product = Provider.of<Product>(context);
     var cart = Provider.of<Cart>(context);
+    final authData = Provider.of<Auth>(context);
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, ProductDetailScreen.route,
           arguments: product.id),
@@ -25,7 +27,7 @@ class ProductItem extends StatelessWidget {
                 builder: (context, value, child) {
                   return IconButton(
                     onPressed: () {
-                      product.toggleFavrouite();
+                      product.toggleFavrouite(authData.token!, authData.userId);
                     },
                     icon: product.isFavourite
                         ? const Icon(Icons.favorite)
