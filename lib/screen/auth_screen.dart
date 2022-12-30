@@ -37,46 +37,43 @@ class AuthScreen extends StatelessWidget {
           ),
           SingleChildScrollView(
             child: SizedBox(
-              height: deviceSize.height,
               width: deviceSize.width,
+              height: deviceSize.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Flexible(
-                      flex: deviceSize.width > 600 ? 2 : 1,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 20.0),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 94.0),
-                        transform: Matrix4.rotationZ(-8 * pi / 180)
-                          ..translate(-10.0),
-                        // ..translate(-10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.deepOrange.shade900,
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                        ),
-                        child: Text(
-                          'MyShop',
-                          style: TextStyle(
-                            // ignore: deprecated_member_use
-                            color: Theme.of(context)
-                                .accentTextTheme
-                                .headline6!
-                                .color,
-                            fontSize: 35,
-                            fontFamily: 'Anton',
-                            fontWeight: FontWeight.normal,
-                          ),
+                  Flexible(
+                    flex: deviceSize.width > 600 ? 2 : 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 20.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 94.0),
+                      transform: Matrix4.rotationZ(-8 * pi / 180)
+                        ..translate(-10.0),
+                      // ..translate(-10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.deepOrange.shade900,
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 8,
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                      ),
+                      child: Text(
+                        'MyShop',
+                        style: TextStyle(
+                          // ignore: deprecated_member_use
+                          color: Theme.of(context)
+                              .accentTextTheme
+                              .headline6!
+                              .color,
+                          fontSize: 35,
+                          fontFamily: 'Anton',
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ),
@@ -104,7 +101,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.login;
   final Map<String, String> _authData = {
@@ -129,6 +127,25 @@ class _AuthCardState extends State<AuthCard> {
             ],
           );
         });
+  }
+
+  AnimationController? _animationController;
+  Animation<Size>? _heightAnimation;
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _heightAnimation = Tween<Size>(
+      begin: const Size(double.infinity, 260),
+      end: const Size(double.infinity, 340),
+    ).animate(
+        CurvedAnimation(parent: _animationController!, curve: Curves.easeIn));
+    _heightAnimation!.addListener(() {
+      setState(() {});
+    });
   }
 
   Future<void> _submit() async {
@@ -175,10 +192,12 @@ class _AuthCardState extends State<AuthCard> {
     if (_authMode == AuthMode.login) {
       setState(() {
         _authMode = AuthMode.signUp;
+        _animationController!.forward();
       });
     } else {
       setState(() {
         _authMode = AuthMode.login;
+        _animationController!.reverse();
       });
     }
   }
@@ -191,12 +210,7 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8.0,
-      child: Container(
-        height: _authMode == AuthMode.signUp ? 320 : 260,
-        constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.signUp ? 320 : 260),
-        width: deviceSize.width * 0.75,
-        padding: const EdgeInsets.all(16.0),
+      child: AnimatedBuilder(
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -279,6 +293,18 @@ class _AuthCardState extends State<AuthCard> {
             ),
           ),
         ),
+        builder: (ctx, child) {
+          return Container(
+            // height: _authMode == AuthMode.signUp ? 320 : 260,
+            height: _heightAnimation!.value.height,
+            constraints:
+                BoxConstraints(minHeight: _heightAnimation!.value.height),
+            width: deviceSize.width * 0.75,
+            padding: const EdgeInsets.all(16.0),
+            child: child,
+          );
+        },
+        animation: _heightAnimation!,
       ),
     );
   }
