@@ -25,6 +25,14 @@ class Orders with ChangeNotifier {
   final String userId;
   Orders(this.authToken, this._orders, this.userId);
 
+  static double checkDouble(dynamic value) {
+    if (value is String) {
+      return double.parse(value);
+    } else {
+      return value + .0;
+    }
+  }
+
   Future<void> fetchAndSetOrder() async {
     final url =
         "https://myapp-8ae0f-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken";
@@ -40,14 +48,14 @@ class Orders with ChangeNotifier {
           0,
           OrderItem(
               id: orderID,
-              amt: orderData['amount'],
+              amt: checkDouble(orderData['amount']),
               dateTime: DateTime.parse(orderData['dateTime']),
               products: (orderData['products'] as List<dynamic>)
                   .map((item) => CartItem(
                         id: item['id'],
                         title: item['title'],
                         quantity: item['quantity'],
-                        price: item['price'],
+                        price: checkDouble(item['price']),
                       ))
                   .toList()));
     });

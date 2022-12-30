@@ -14,11 +14,12 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print("\nIts Auth\n");
     final deviceSize = MediaQuery.of(context).size;
     // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
     // transformConfig.translate(-10.0);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Container(
@@ -42,36 +43,40 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 20.0),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
-                      // ..translate(-10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.deepOrange.shade900,
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Text(
-                        'MyShop',
-                        style: TextStyle(
-                          // ignore: deprecated_member_use
-                          color: Theme.of(context)
-                              .accentTextTheme
-                              .headline6!
-                              .color,
-                          fontSize: 50,
-                          fontFamily: 'Anton',
-                          fontWeight: FontWeight.normal,
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Flexible(
+                      flex: deviceSize.width > 600 ? 2 : 1,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 94.0),
+                        transform: Matrix4.rotationZ(-8 * pi / 180)
+                          ..translate(-10.0),
+                        // ..translate(-10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.deepOrange.shade900,
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 8,
+                              color: Colors.black26,
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                        ),
+                        child: Text(
+                          'MyShop',
+                          style: TextStyle(
+                            // ignore: deprecated_member_use
+                            color: Theme.of(context)
+                                .accentTextTheme
+                                .headline6!
+                                .color,
+                            fontSize: 35,
+                            fontFamily: 'Anton',
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ),
                     ),

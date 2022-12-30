@@ -12,8 +12,11 @@ import './screen/user_products_screen.dart';
 
 import './screen/product_detail_screen.dart';
 import './screen/product_overview_screen.dart';
+import './screen/splashScreen.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -24,27 +27,44 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProxyProvider<Auth, Products>(
-          create: (context) => Products('', '', []),
           update: (context, auth, periviousProducts) => Products(
-              auth.token!,
-              auth.userId,
-              periviousProducts == null ? [] : periviousProducts.items),
+            auth.token ?? "",
+            auth.userId ?? "",
+            periviousProducts == null ? [] : periviousProducts.items,
+          ),
+          create: (context) => Products('', '', []),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (context) => Orders('', [], ''),
-          update: (context, auth, previousOrders) =>
-              Orders(auth.token!, previousOrders!.orders, auth.userId,),
+          update: (context, auth, previousOrders) => Orders(
+            auth.token!,
+            previousOrders!.orders,
+            auth.userId!,
+          ),
         ),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) {
+          // print("Main Screen: ${auth.isAuth}");
           return MaterialApp(
             home: auth.isAuth
                 ? const ProductOverviewScreen()
-                : const AuthScreen(),
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authSnapShot) {
+                      var hello = auth.tryAutoLogin().then((result) {
+                        return result;
+                      });
+                      // print("auto:" + hello.toString());
+
+                      return authSnapShot.connectionState ==
+                              ConnectionState.waiting
+                          ? const SplashScreen()
+                          : const AuthScreen();
+                    }),
             routes: {
               ProductOverviewScreen.route: (context) =>
                   const ProductOverviewScreen(),

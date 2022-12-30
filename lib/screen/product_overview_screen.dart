@@ -20,12 +20,23 @@ class ProductOverviewScreen extends StatefulWidget {
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var showFavs = false;
   var isLoading = false;
+
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
     setState(() {
       isLoading = true;
     });
+
     Provider.of<Products>(context, listen: false)
         .fetchAndSetProducts()
         .then((_) {

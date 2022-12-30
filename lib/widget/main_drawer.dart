@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screen/user_products_screen.dart';
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
+import '../screen/user_products_screen.dart';
 import '../screen/order_screen.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -29,10 +31,21 @@ class MainDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            onTap: ()=> Navigator.of(context).pushReplacementNamed(UserProductsScreen.route),
+            onTap: () => Navigator.of(context)
+                .pushReplacementNamed(UserProductsScreen.route),
             leading: const Icon(Icons.edit),
             title: const Text("Manage Products"),
-
+          ),
+          const Divider(),
+          ListTile(
+            onTap: () {
+              // pop closes the drawer
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+              Provider.of<Auth>(context, listen: false).logOut();
+            },
+            leading: const Icon(Icons.logout),
+            title: const Text("Log Out"),
           ),
         ],
       ),

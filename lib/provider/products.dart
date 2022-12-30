@@ -15,15 +15,24 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  String authToken;
-  String userId;
+  final String authToken;
+  final String userId;
   Products(this.authToken, this.userId, this._items);
   List<Product> get showFavs {
     return _items.where((element) => element.isFavourite).toList();
   }
 
+  static double checkDouble(dynamic value) {
+    if (value is String) {
+      return double.parse(value);
+    } else {
+      return value + .0;
+    }
+  }
+
   Future<void> fetchAndSetProducts([var filterUrl = false]) async {
-    var additionalUrl = filterUrl?'orderBy="creatorId"&equalTo="$userId"':' ';
+    var additionalUrl =
+        filterUrl ? 'orderBy="creatorId"&equalTo="$userId"' : ' ';
     var url =
         'https://myapp-8ae0f-default-rtdb.firebaseio.com/products.json?auth=$authToken&$additionalUrl';
     try {
@@ -43,7 +52,7 @@ class Products with ChangeNotifier {
             id: productID,
             title: productData['title'],
             description: productData['description'],
-            price: productData['price'],
+            price: checkDouble(productData['price']),
             imageUrl: productData['imageUrl'],
             isFavourite: favouriteData == null
                 ? false
