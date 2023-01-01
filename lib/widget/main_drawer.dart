@@ -27,12 +27,14 @@ class MainDrawer extends StatelessWidget {
                 const SizedBox(
                   width: 10.0,
                 ),
-                FittedBox(
-                  child: Text(
-                    authProvider.userMail!,
-                    overflow: TextOverflow.fade,
-                    softWrap: true,
-                    style: const TextStyle(fontSize: 16.0),
+                Expanded(
+                  child: FittedBox(
+                    child: Text(
+                      authProvider.userMail!,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ),
                 ),
               ],
