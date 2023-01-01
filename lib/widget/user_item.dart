@@ -16,8 +16,16 @@ class UserItem extends StatelessWidget {
     final scaffold = ScaffoldMessenger.of(context);
     return ListTile(
       title: Text(title),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(50.0),
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: FadeInImage(
+              placeholder: const AssetImage('assets/images/loading_image.png'),
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover),
+        ),
       ),
       trailing: Container(
         alignment: Alignment.centerRight,

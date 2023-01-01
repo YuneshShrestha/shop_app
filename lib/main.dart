@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helper/custom_route.dart';
 import './provider/auth.dart';
 import './screen/auth_screen.dart';
 import './screen/edit_product_screen.dart';
@@ -55,11 +56,6 @@ class MyApp extends StatelessWidget {
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (context, authSnapShot) {
-                      var hello = auth.tryAutoLogin().then((result) {
-                        return result;
-                      });
-                      // print("auto:" + hello.toString());
-
                       return authSnapShot.connectionState ==
                               ConnectionState.waiting
                           ? const SplashScreen()
@@ -76,6 +72,10 @@ class MyApp extends StatelessWidget {
               EditProductScreen.route: (context) => const EditProductScreen()
             },
             theme: ThemeData(
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder(),
+                }),
                 fontFamily: 'Lato',
                 colorScheme:
                     ColorScheme.fromSwatch(primarySwatch: Colors.purple)

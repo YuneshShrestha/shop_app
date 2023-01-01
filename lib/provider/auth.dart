@@ -10,6 +10,7 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   String? _userId;
   Timer? _authTimer;
+  String? userMail;
 
   String? get token {
     if (_expiryDate != null &&
@@ -39,6 +40,7 @@ class Auth with ChangeNotifier {
             "password": password,
             "returnSecureToken": true,
           }));
+
       final responseDecode = json.decode(response.body);
       if (responseDecode['error'] != null) {
         throw HttpException(message: responseDecode['error']['message']);
@@ -50,6 +52,7 @@ class Auth with ChangeNotifier {
         ),
       );
       _userId = responseDecode['localId'];
+      userMail = email;
       _autoLogout();
 
       notifyListeners();
@@ -58,6 +61,7 @@ class Auth with ChangeNotifier {
         'token': _token,
         'userId': _userId,
         'expiryDate': _expiryDate?.toIso8601String(),
+        'userMail': email
       });
       prefs.setString('userData', userData);
     } catch (e) {
@@ -112,6 +116,7 @@ class Auth with ChangeNotifier {
     _token = extractedUserData['token'] as String;
     _userId = extractedUserData['userId'] as String;
     _expiryDate = expiryDate;
+    userMail = extractedUserData['userMail'];
     notifyListeners();
     _autoLogout();
     return true;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screen/edit_product_screen.dart';
+import 'package:shop_app/shimmers/user_product_shimmer.dart';
 import 'package:shop_app/widget/main_drawer.dart';
 import '../provider/products.dart';
 import '../widget/user_item.dart';
@@ -32,9 +33,7 @@ class UserProductsScreen extends StatelessWidget {
         future: getRefreshedProducts(),
         builder: (ctx, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
+            ? const ShimmeringUser()
             : RefreshIndicator(
                 onRefresh: getRefreshedProducts,
                 child: ListView.builder(

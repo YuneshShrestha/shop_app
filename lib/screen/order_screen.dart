@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/shimmers/order_screen_shimmer.dart';
 import '../provider/orders.dart';
 import '../widget/main_drawer.dart';
 import '../widget/order_item.dart' as widget_order_item;
@@ -25,6 +26,14 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +44,7 @@ class _OrderScreenState extends State<OrderScreen> {
         future: _ordersData,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const ShimmeringOrder();
           } else {
             if (snapshot.error != null) {
               return const Center(child: Text("Error Occured!"));

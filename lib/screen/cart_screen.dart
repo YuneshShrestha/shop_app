@@ -75,6 +75,13 @@ class OrderButton extends StatefulWidget {
 
 class _OrderButtonState extends State<OrderButton> {
   var isLoading = false;
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   Future<void> addCart() async {
     setState(() {
@@ -91,14 +98,16 @@ class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        onPressed: widget.cart.findTotal <= 0
+        onPressed: isLoading
             ? null
-            : () => addCart().catchError((error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Adding Order Failed $error")));
-                }),
+            : widget.cart.findTotal <= 0
+                ? null
+                : () => addCart().catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Adding Order Failed $error")));
+                    }),
         child: isLoading
-            ? const CircularProgressIndicator()
+            ? Text("Processing...".toUpperCase())
             : Text("Order Now".toUpperCase()));
   }
 }

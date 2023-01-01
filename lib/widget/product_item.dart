@@ -20,14 +20,22 @@ class ProductItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: GridTile(
-          child: Image.network(product.imageUrl, fit: BoxFit.cover),
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder:const AssetImage('assets/images/loading_image.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover
+            ),
+          ),
           footer: GridTileBar(
               backgroundColor: Colors.black87,
               leading: Consumer<Product>(
                 builder: (context, value, child) {
                   return IconButton(
                     onPressed: () {
-                      product.toggleFavrouite(authData.token!, authData.userId!);
+                      product.toggleFavrouite(
+                          authData.token!, authData.userId!);
                     },
                     icon: product.isFavourite
                         ? const Icon(Icons.favorite)

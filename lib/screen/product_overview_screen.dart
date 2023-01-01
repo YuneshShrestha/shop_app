@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/shimmers/product_overview_shimmer.dart';
 import '../provider/cart.dart';
 import '../screen/cart_screen.dart';
 import '../widget/badge.dart';
@@ -92,9 +93,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const ShimmeringProduct()
           : ProductsGrid(showFavs: showFavs),
     );
   }

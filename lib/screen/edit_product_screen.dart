@@ -34,6 +34,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
